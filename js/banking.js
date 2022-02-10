@@ -1,43 +1,47 @@
-document.getElementById("dipositButton").addEventListener("click", function () {
-    const input = document.getElementById("diposit-input");
+function getInputValue(inputId) {
+    const input = document.getElementById(inputId);
     const inputText = input.value;
-    const inputValueDeposit = parseFloat(inputText);
-    //get current deposit
-    const currentDeposit = document.getElementById("diposits");
-    const currentDepositText = currentDeposit.innerText;
-    const currentDepositValue = parseFloat(currentDepositText);
-    const totalDepositeValue = currentDepositValue + inputValueDeposit;
-    currentDeposit.innerText = totalDepositeValue;
+    const inputValue = parseFloat(inputText);
+    //clear input
+    input.value = "";
+    return inputValue;
+}
 
-    //balance after adiposit
+function currentBalanceUpdate(fildInput, amount) {
+    const currentBalance = document.getElementById(fildInput);
+    const currentBalanceText = currentBalance.innerText;
+    const currentBalanceValue = parseFloat(currentBalanceText);
+    currentBalance.innerText = currentBalanceValue + amount;
+}
+
+function totalBalance(initialAmount, isAdd) {
     const primeryBalance = document.getElementById("balance");
     const primeryBalanceText = primeryBalance.innerText;
     const primeryBalanceValue = parseFloat(primeryBalanceText);
-    primeryBalance.innerText = primeryBalanceValue + inputValueDeposit;
+    if (isAdd == true) {
+        primeryBalance.innerText = primeryBalanceValue + initialAmount;
+    } else {
+        primeryBalance.innerText = primeryBalanceValue - initialAmount;
+    }
+}
 
-    //clear input
-    input.value = "";
+document.getElementById("dipositButton").addEventListener("click", function () {
+    //input for diposit
+    const inputValueDeposit = getInputValue("diposit-input");
+    //get current deposit
+    currentBalanceUpdate("diposits", inputValueDeposit)
+    //balance after adiposit
+    totalBalance(inputValueDeposit, true)
 
 });
 
 //handel withdraw event handeler
 document.getElementById("withdrawButton").addEventListener("click", function () {
-    //Get the amount to be withdraw
-    const inputWithdraw = document.getElementById("withdraw-input");
-    const inputWithdrawText = inputWithdraw.value;
-    const inputWithdrawAmount = parseFloat(inputWithdrawText);
+    //input withdrawal
+    const inputWithdrawAmount = getInputValue("withdraw-input")
     //update withdraw total
-    const withdrawTotal = document.getElementById("withdraw");
-    const withdrawTotalText = withdrawTotal.innerText;
-    const withdrawTotalAmount = parseFloat(withdrawTotalText);
-    const newWithdrawTotal = withdrawTotalAmount + inputWithdrawAmount;
-    withdrawTotal.innerText = newWithdrawTotal;
-    //update balance after withdraw
-    const reduceBalance = document.getElementById("balance");
-    const reduceBalancebalanceText = reduceBalance.innerText;
-    const newReduceBalance = parseFloat(reduceBalancebalanceText);
-    reduceBalance.innerText = newReduceBalance - inputWithdrawAmount;
-    //clear input
-    inputWithdraw.value = "";
+    currentBalanceUpdate("withdraw", inputWithdrawAmount)
+    //after withdrawal total
+    totalBalance(inputWithdrawAmount, false)
 
 })
